@@ -16,5 +16,5 @@ resource "azurerm_subnet" "subnet" {
   name                 = "snet-prod-${var.location}-${each.key}"
   address_prefixes     = ["${each.value.address_prefix}"]
   resource_group_name = var.resource_group_name
-  virtual_network_name = azurerm_virtual_network.vnet.name
+  virtual_network_name = azurerm_virtual_network.vnet[each.key].name
 }

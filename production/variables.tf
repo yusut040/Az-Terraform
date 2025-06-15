@@ -7,13 +7,13 @@ variable "windows_vms" {
 
 variable "vnets" {
   type = map(object({
-    address_prefixes =  string
+    address_prefix =  string
   }))
 }
 
 variable "subnets" {
   type = map(object({
-    address_prefixes =  string
+    address_prefix =  string
   }))
 }
 
@@ -25,10 +25,5 @@ variable "vm_nics" {
 
 #システム固有名詞（アプリケーション、システム、ワークロード名）
 variable "system-name" {
-  type = string
-  description = "value"
-}
-
-variable "resource_group_name" {
   type = string
 }
