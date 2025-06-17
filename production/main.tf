@@ -4,6 +4,14 @@ resource "azurerm_resource_group" "resource_group" {
   location = "japaneast"
 }
 
+module "bastion" {
+  source = "./modules/bastion"
+
+  resource_group_name = azurerm_resource_group.resource_group.name
+  location = azurerm_resource_group.resource_group.location
+  vnet_name = module.vnet.vnet_name
+}
+
 #各モジュールに渡したい設定値を記載
 module "db" {
   source = "./modules/db"

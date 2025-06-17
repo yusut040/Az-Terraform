@@ -17,9 +17,9 @@ subnets = {
   "01" = {
     address_prefix = "10.1.1.0/24"
   },
-#   "02" = {
-#     address_prefix = "10.1.2.0/24"
-#   }
+  "02" = {
+    address_prefix = "10.1.2.0/24"
+  }
 }
 
 #VMのリソース名はvm-<mapのキー>-prod-<番号>とする
@@ -41,13 +41,16 @@ windows_vms = {
 }
 
 vm_nics = {
-  "ap" = {
+  "ap01" = {
     name = "vm-prod-01-nic"
+    subnet_key = "02"
   },
-  "db" = {
+  "db01" = {
     name = "vm-prod-02-nic"
+    subnet_key = "02"
   },
-  "web" = {
+  "web01" = {
     name = "vm-prod-03-nic"
+    subnet_key = "01"
   }
 }

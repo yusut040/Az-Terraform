@@ -12,7 +12,7 @@ resource "azurerm_network_interface" "vm_nic" {
 
   ip_configuration {
     name                          = "internal-ipconfig"
-    subnet_id                     = var.subnet_ids
+    subnet_id = var.subnet_ids[each.value.subnet_key]
     private_ip_address_allocation = "Dynamic"
   }
 }
@@ -20,14 +20,14 @@ resource "azurerm_network_interface" "vm_nic" {
 resource "azurerm_windows_virtual_machine" "windows_vm" {
   for_each = var.windows_vm
 
-  name                = "vm-${each.value.name}-prod"
+  name                = "vm-${each.key}-prod"
   resource_group_name = var.resource_group_name
   location            = var.location
   size                = each.value.size
 
   admin_username      = "azureuser"
   admin_password      = "!QAZ2wsx3edc"
-  network_interface_ids = var.subnet_ids
+  network_interface_ids = [azurerm_network_interface.vm_nic[each.key].id]
   
   os_disk {
     caching              = "ReadWrite"

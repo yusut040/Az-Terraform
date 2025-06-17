@@ -20,6 +20,7 @@ variable "subnets" {
 variable "vm_nics" {
   type = map(object({
     name = string
+    subnet_key = string
   }))
 }
 
