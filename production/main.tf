@@ -10,8 +10,8 @@ module "bastion" {
   resource_group_name      = azurerm_resource_group.resource_group.name
   location                 = azurerm_resource_group.resource_group.location
   vnet_name                = module.vnet.vnet_name
-  bastion_address_prefix   = var.bastion-address-prefix
-  bastion_sku              = var.bastion-sku
+  bastion-address-prefix   = var.bastion-address-prefix
+  bastion-sku              = var.bastion-sku
 }
 
 #各モジュールに渡したい設定値を記載
