@@ -7,9 +7,11 @@ resource "azurerm_resource_group" "resource_group" {
 module "bastion" {
   source = "./modules/bastion"
 
-  resource_group_name = azurerm_resource_group.resource_group.name
-  location = azurerm_resource_group.resource_group.location
-  vnet_name = module.vnet.vnet_name
+  resource_group_name      = azurerm_resource_group.resource_group.name
+  location                 = azurerm_resource_group.resource_group.location
+  vnet_name                = module.vnet.vnet_name
+  bastion_address_prefix   = var.bastion-address-prefix
+  bastion_sku              = var.bastion-sku
 }
 
 #各モジュールに渡したい設定値を記載
@@ -34,8 +36,7 @@ module "vm" {
 
   resource_group_name = azurerm_resource_group.resource_group.name
   location = azurerm_resource_group.resource_group.location
-  windows_vm = var.windows_vms
-  vm_nic = var.vm_nics
+  windows_vms = var.windows_vms
   subnet_ids = module.vnet.subnet_ids
 }
 

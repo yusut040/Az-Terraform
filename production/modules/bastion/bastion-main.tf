@@ -1,30 +1,33 @@
 variable "resource_group_name" {}
 variable "location" {}
 variable "vnet_name" {}
+variable "bastion_address_prefix" {}
+variable "bastion_sku" {}
 
-resource "azurerm_subnet" "example" {
+resource "azurerm_subnet" "az-bastion-subnet" {
   name                 = "AzureBastionSubnet"
   resource_group_name  = var.resource_group_name
-  virtual_network_name = azurerm_virtual_network.example.name
-  address_prefixes     = ["192.168.1.224/27"]
+  virtual_network_name = var.vnet_name
+  address_prefixes     = ["${var.bastion_address_prefix}"]
 }
 
-resource "azurerm_public_ip" "bastion-pip" {
-  name                = "examplepip"
-  location            = azurerm_resource_group.example.location
-  resource_group_name = azurerm_resource_group.example.name
+resource "azurerm_public_ip" "az-bastion-pip" {
+  name                = "bastionpip"
+  location            = var.location
+  resource_group_name  = var.resource_group_name
   allocation_method   = "Static"
   sku                 = "Standard"
 }
 
-resource "azurerm_bastion_host" "example" {
-  name                = "examplebastion"
-  location            = azurerm_resource_group.example.location
-  resource_group_name = azurerm_resource_group.example.name
+resource "azurerm_bastion_host" "az-bastion-host" {
+  name                = "azbastionhost"
+  location            = var.location
+  resource_group_name  = var.resource_group_name
+  sku                = var.bastion_sku
 
   ip_configuration {
-    name                 = "configuration"
-    subnet_id            = azurerm_subnet.example.id
-    public_ip_address_id = azurerm_public_ip.example.id
+    name                 = "bastion-ipconfiguration"
+    subnet_id            = azurerm_subnet.az-bastion-subnet.id
+    public_ip_address_id = azurerm_public_ip.az-bastion-pip.id
   }
 }

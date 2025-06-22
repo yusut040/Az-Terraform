@@ -1,24 +1,28 @@
 variable "resource_group_name" {}
 variable "location" {}
-variable "windows_vm" {}
-variable "vm_nic" {}
+variable "windows_vms" {}
 variable "subnet_ids" {}
 
 resource "azurerm_network_interface" "vm_nic" {
-  for_each = var.vm_nic
-  name                = "nic-${each.value.name}-prod"
+  for_each = {
+    for vm_key, vm in var.windows_vms
+        for nic_key, nic in vm.nics :
+      "${vm_key}-${nic_key}" => merge(nic, { vm_key = vm_key, nic_key = nic_key })
+  }
+
+  name                = each.value.name
   resource_group_name = var.resource_group_name
   location            = var.location
 
   ip_configuration {
     name                          = "internal-ipconfig"
-    subnet_id = var.subnet_ids[each.value.subnet_key]
+    subnet_id                     = var.subnet_ids[each.value.join_subnet_key]
     private_ip_address_allocation = "Dynamic"
   }
 }
 
 resource "azurerm_windows_virtual_machine" "windows_vm" {
-  for_each = var.windows_vm
+  for_each = var.windows_vms
 
   name                = "vm-${each.key}-prod"
   resource_group_name = var.resource_group_name
