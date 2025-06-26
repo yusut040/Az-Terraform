@@ -1,3 +1,5 @@
+variable "nsgs" {}
+
 resource "azurerm_network_security_group" "example" {
   name                = "acceptanceTestSecurityGroup1"
   location            = azurerm_resource_group.example.location
