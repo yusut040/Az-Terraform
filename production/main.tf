@@ -1,9 +1,3 @@
-#リソースグループの定義
-resource "azurerm_resource_group" "resource_group" {
-  name     = "rg-${var.system-name}-prod-001"
-  location = "japaneast"
-}
-
 # module "bastion" {
 #   source = "./modules/bastion"
 
@@ -13,6 +7,11 @@ resource "azurerm_resource_group" "resource_group" {
 #   bastion-address-prefix   = var.bastion-address-prefix
 #   bastion-sku              = var.bastion-sku
 # }
+
+module "rg" {
+  source = "./modules/rg"
+  system-name = var.system-name
+}
 
 #各モジュールに渡したい設定値を記載
 module "db" {
@@ -49,7 +48,10 @@ module "vnet" {
   subnets = var.subnets
 }
 
-module "nsg" {
+module "mz_nsgs" {
   source = "./modules/nsg"
-  nsgs = var.nsgs
+
+  resource_group_name = azurerm_resource_group.resource_group.name
+  location = azurerm_resource_group.resource_group.location
+  mz_nsgs = var.mz_nsgs
 }

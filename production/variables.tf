@@ -35,7 +35,7 @@ variable "bastion-sku" {
 variable "bastion-address-prefix" {
   type = string
 }
-variable "nsgs" {
+variable "mz_nsgs" {
   type = map(object({
     name = string
     rules = map(object({

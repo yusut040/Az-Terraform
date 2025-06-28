@@ -1,9 +1,11 @@
-variable "nsgs" {}
+variable "mz_nsgs" {}
+variable "resource_group_name" {}
+variable "location" {}
 
-resource "azurerm_network_security_group" "example" {
+resource "azurerm_network_security_group" "az_mz_nsg" {
   name                = "acceptanceTestSecurityGroup1"
-  location            = azurerm_resource_group.example.location
-  resource_group_name = azurerm_resource_group.example.name
+  location            = var.location
+  resource_group_name = var.resource_group_name
 
   security_rule {
     name                       = "test123"
