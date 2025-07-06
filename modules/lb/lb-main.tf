@@ -2,6 +2,21 @@ variable "resource_group_name" {}
 variable "location" {}
 variable "system-name" {}
 variable "lb" {}
+variable "nic_info" {}
+
+locals {
+  lb_targer_nics = {
+    for nic_key, nic in var.nic_info : 
+    nic_key => {
+      nic = nic.id
+      name             = nic.name
+      join_subnet_key  = nic.join_subnet_key
+      public_ip        = nic.public_ip
+      lb_flag          = nic.lb_flag
+    } if nic.lb_flag == true
+  }
+}
+
 
 resource "azurerm_public_ip" "az_pip" {
   name                = "pip-lbe-prod"
@@ -28,20 +43,20 @@ resource "azurerm_lb_backend_address_pool" "az_lb_backend_pool" {
 }
 
 resource "azurerm_network_interface_backend_address_pool_association" "az_lb_backend_address_pool_association" {
-  network_interface_id    = azurerm_network_interface.vm_network_interface.id
+  for_each = local.lb_targer_nics
+  network_interface_id    = each.value.id
   ip_configuration_name   = "vm_ip_configuration"
-  backend_address_pool_id = azurerm_lb_backend_address_pool.lb_backend_pool.id
+  backend_address_pool_id = azurerm_lb_backend_address_pool.az_lb_backend_pool.id
 }
 
 resource "azurerm_lb_probe" "lb_probe" {
-  resource_group_name = azurerm_resource_group.resource_group.name
   loadbalancer_id     = azurerm_lb.lb.id
   name                = "http-running-probe"
   port                = 80
 }
 
 resource "azurerm_lb_rule" "lb_rule" {
-  resource_group_name            = azurerm_resource_group.resource_group.name
+  resource_group_name = var.resource_group_name
   loadbalancer_id                = azurerm_lb.lb.id
   name                           = local.lb_rule_name
   protocol                       = "Tcp"

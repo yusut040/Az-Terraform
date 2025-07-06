@@ -29,6 +29,7 @@ module "lb" {
   system-name = var.system-name
   resource_group_name = module.rg.resource_group_name
   location = module.rg.location_name
+  nic_info = module.vm.nic_ids
 }
 
 module "monitor" {

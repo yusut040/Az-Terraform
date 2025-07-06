@@ -62,6 +62,7 @@ windows_vms = {
         name = "web02-nic"
         join_subnet_key = "subnet01"
         public_ip       = false
+        lb_flag        = true
       }
     }
   }
