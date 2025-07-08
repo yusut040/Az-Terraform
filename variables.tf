@@ -55,13 +55,11 @@ variable "mz_nsgs" {
 }
 
 variable "lb" {
-  type = map(object({
-    resource_group_name = string
-    location = string
+  type = object({
     frontend_ip_configuration_name = string
     public_ip_address_name = string
     backend_address_pool_name = string
     probe_name = string
     rule_name = string
-  }))
+  })
 }

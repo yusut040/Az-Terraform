@@ -26,7 +26,6 @@ resource "azurerm_public_ip" "az_pip" {
 }
 
 resource "azurerm_lb" "az_lb" {
-  for_each = var.lb
   name                = "lbe-${var.system-name}-prod"
   location            = var.location
   resource_group_name = var.resource_group_name
@@ -44,33 +43,24 @@ resource "azurerm_lb_backend_address_pool" "az_lb_backend_pool" {
 
 resource "azurerm_network_interface_backend_address_pool_association" "az_lb_backend_address_pool_association" {
   for_each = local.lb_targer_nics
-  network_interface_id    = each.value.id
+  network_interface_id    = each.value.nic
   ip_configuration_name   = "vm_ip_configuration"
   backend_address_pool_id = azurerm_lb_backend_address_pool.az_lb_backend_pool.id
 }
 
 resource "azurerm_lb_probe" "lb_probe" {
-  loadbalancer_id     = azurerm_lb.lb.id
+  loadbalancer_id     = azurerm_lb.az_lb.id
   name                = "http-running-probe"
   port                = 80
 }
 
 resource "azurerm_lb_rule" "lb_rule" {
-  resource_group_name = var.resource_group_name
-  loadbalancer_id                = azurerm_lb.lb.id
-  name                           = local.lb_rule_name
+  loadbalancer_id                = azurerm_lb.az_lb.id
+  name                           = "lb-rule-http"
   protocol                       = "Tcp"
   frontend_port                  = 80
   backend_port                   = 80
-  backend_address_pool_id        = azurerm_lb_backend_address_pool.lb_backend_pool.id
-  frontend_ip_configuration_name = "lb_public_ip_configuration"
+  backend_address_pool_ids       = [azurerm_lb_backend_address_pool.az_lb_backend_pool.id]
+  frontend_ip_configuration_name = "lbePublicIPAddress"
   probe_id                       = azurerm_lb_probe.lb_probe.id
-}
-
-resource "azurerm_dns_a_record" "lb_dns_record" {
-  name = local.lb_domain_name
-  zone_name = azurerm_dns_zone.dns_zone.name
-  resource_group_name = azurerm_resource_group.resource_group.name
-  ttl = 300
-  target_resource_id = azurerm_public_ip.lb_public_ip.id
 }
