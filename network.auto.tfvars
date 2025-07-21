@@ -8,11 +8,11 @@ vnets = {
 }
 
 lb ={
-    frontend_ip_configuration_name = "PublicIPAddress"
-    public_ip_address_name = "PublicIPForLB"
-    backend_address_pool_name = "BackEndAddressPool"
-    probe_name = "http-running-probe"
-    rule_name = "http-running-rule"
+  frontend_ip_configuration_name = "PublicIPAddress"
+  public_ip_address_name = "PublicIPForLB"
+  backend_address_pool_name = "BackEndAddressPool"
+  probe_name = "http-running-probe"
+  rule_name = "http-running-rule"
 }
 
 subnets = {

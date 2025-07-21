@@ -1,8 +1,7 @@
 # variable "resource_group_name" {}
 # variable "location" {}
 # variable "vnet_name" {}
-# variable "bastion-address-prefix" {}
-# variable "bastion-sku" {}
+# variable "bastion" {}
 
 # resource "azurerm_subnet" "az-bastion-subnet" {
 #   name                 = "AzureBastionSubnet"

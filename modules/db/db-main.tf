@@ -12,7 +12,7 @@ resource "azurerm_mssql_server" "az-sqlserver" {
   minimum_tls_version          = "1.2"
 }
 
-resource "azurerm_mssql_firewall_rule" "example" {
+resource "azurerm_mssql_firewall_rule" "az-sqlserver-firewall-rule" {
   name             = "FirewallRule1"
   server_id        = azurerm_mssql_server.az-sqlserver.id
   start_ip_address = "0.0.0.0"

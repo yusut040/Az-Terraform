@@ -4,8 +4,7 @@
 #   resource_group_name      = azurerm_resource_group.resource_group.name
 #   location                 = azurerm_resource_group.resource_group.location
 #   vnet_name                = module.vnet.vnet_name
-#   bastion-address-prefix   = var.bastion-address-prefix
-#   bastion-sku              = var.bastion-sku
+#   bastion = var.bastion
 # }
 
 module "rg" {
@@ -30,10 +29,6 @@ module "lb" {
   resource_group_name = module.rg.resource_group_name
   location = module.rg.location_name
   nic_info = module.vm.nic_ids
-}
-
-module "monitor" {
-  source = "./modules/monitor"
 }
 
 module "vm" {
@@ -61,4 +56,22 @@ module "mz_nsgs" {
   location = module.rg.location_name
   mz_nsgs = var.mz_nsgs
   subnet_ids = module.vnet.subnet_ids
+}
+
+module "storage_account" {
+  source = "./modules/storage_account"
+
+  resource_group_name = module.rg.resource_group_name
+  location = module.rg.location_name
+  storageaccount = var.storageaccount
+}
+
+module "monitor" {
+  source = "./modules/monitor"
+
+  resource_group_name = module.rg.resource_group_name
+  location = module.rg.location_name
+  loganalyticsworkspace = var.loganalyticsworkspace
+  dce = var.dce
+  vm_ids = module.vm.vm_ids
 }

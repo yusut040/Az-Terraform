@@ -23,12 +23,14 @@ resource "azurerm_public_ip" "az_pip" {
   location            = var.location
   resource_group_name = var.resource_group_name
   allocation_method   = "Static"
+  sku = "Standard"
 }
 
 resource "azurerm_lb" "az_lb" {
   name                = "lbe-${var.system-name}-prod"
   location            = var.location
   resource_group_name = var.resource_group_name
+  sku = "Standard"
 
   frontend_ip_configuration {
     name                 = "lbePublicIPAddress"
@@ -44,7 +46,7 @@ resource "azurerm_lb_backend_address_pool" "az_lb_backend_pool" {
 resource "azurerm_network_interface_backend_address_pool_association" "az_lb_backend_address_pool_association" {
   for_each = local.lb_targer_nics
   network_interface_id    = each.value.nic
-  ip_configuration_name   = "vm_ip_configuration"
+  ip_configuration_name   = "internal-ipconfig"
   backend_address_pool_id = azurerm_lb_backend_address_pool.az_lb_backend_pool.id
 }
 

@@ -30,12 +30,12 @@ variable "system-name" {
   type = string
 }
 
-# variable "bastion-sku" {
-#   type = string
-# }
-
-# variable "bastion-address-prefix" {
-#   type = string
+# variable "bastion" {
+#   type = object({
+#     name = string
+#     address_prefix = string
+#     bastion_sku = string
+#   })
 # }
 
 variable "mz_nsgs" {
@@ -61,5 +61,26 @@ variable "lb" {
     backend_address_pool_name = string
     probe_name = string
     rule_name = string
+  })
+}
+
+variable "storageaccount" {
+  type = object({
+    name = string
+    account_tier = string
+    account_replication_type = string
+  })
+}
+
+variable "loganalyticsworkspace" {
+  type = object({
+    name = string
+    retention_in_days = number
+  })
+}
+
+variable "dce" {
+  type = object({
+    name = string
   })
 }

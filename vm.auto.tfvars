@@ -55,6 +55,7 @@ windows_vms = {
   },
   "web02" = {
     size     = "Standard_B2as_v2"
+    
     os_image = "2022-Datacenter"
     zone = ["1", "2", "3"]
     nics = {
@@ -69,6 +70,8 @@ windows_vms = {
 }
 
 #Bastionの設定
-#Bastionについては複数作成する想定はないためmapでの定義はしていません。
-# bastion-address-prefix = "10.1.3.0/26"
-# bastion-sku = "Basic"
+# bastion = {
+#   name = "ytoyoda8-prod-bastion"
+#   address_prefix = "10.1.3.0/26"
+#   bastion-sku = "Basic"
+# }

@@ -11,7 +11,8 @@ locals {
   nic_configs = {
     for nic in flatten([
       for vm_key, vm in var.windows_vms : [
-        for nic_key, nic in vm.nics : merge(nic, { vm_key = vm_key, nic_key = nic_key })
+        for nic_key, nic in vm.nics : 
+        merge(nic, { vm_key = vm_key, nic_key = nic_key })
       ]
     ]) : 
     "${nic.vm_key}-${nic.nic_key}" => nic
@@ -27,5 +28,12 @@ output "nic_ids" {
       public_ip        = local.nic_configs[nic_key].public_ip
       lb_flag          = local.nic_configs[nic_key].lb_flag
     }
+  }
+}
+
+output "vm_ids" {
+  description = "Map of VM IDs for monitoring purposes"
+  value = {
+    for vm_key, vm in azurerm_windows_virtual_machine.windows_vm : vm_key => vm.id
   }
 }
